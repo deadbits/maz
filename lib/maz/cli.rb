@@ -22,6 +22,8 @@ require 'trollop'
 
 module Maz
   class CLI
+    # TODO
+    # Fix this mess. There has to be a better way!
     Core = Maz::Core.new
     Analyze = Maz::Core.new
     Database = Maz::Database.new
