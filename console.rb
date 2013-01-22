@@ -12,6 +12,11 @@ require 'readline'
 require File.expand_path("#{File.dirname __FILE__}/lib/maz")
 
 class Console
+  # TODO
+  # Fix lib/* requires across the board
+  # finish command dispatch function
+  # fix command prompt loop w/ readline
+  # find a better way for command/help/function handling
   Core = Maz::Core.new
   Analyze = Maz::Analyze.new
   External = Maz::External.new
