@@ -1,0 +1,31 @@
+Manifest.txt
+PostInstall.txt
+bin/
+  |- console.rb
+	|- cli.rb
+	|- mini.rb
+conf/
+  |- database.yml
+	|- console.yml
+	|- external.yml
+data/
+	|- storage/
+docs/
+  |- readme
+	|- license
+	|- guide
+	|- install
+	|- contrib
+lib/
+  |- maz.rb
+	|- maz/
+	   |- core.rb
+		 |- external.rb
+		 |- database.rb
+		 |- analyze.rb
+		 |- splunk.rb
+		 |- cuckoo.rb
+console.rb
+cli.rb
+mini.rb
+

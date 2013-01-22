@@ -1,0 +1,6 @@
+Malware Analysis Zoo
+ohdae [ams] - 2013
+https://github.com/ohdae/maz
+
+MAZ is a Ruby based application for performing malware analysis and storage. 
+This project is still in it's early stages and needs a lot of work. Nothing fancy. 

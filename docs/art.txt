@@ -1,0 +1,61 @@
+
+                                                                                
+                                                                                
+                                            .~I77$77~.                          
+                             +7II7$:     .77IIIIIII77$I$.                       
+                         .I7$7I??Z~:Z   77IIIIIIIIII7Z77$Z.                     
+                       .7IIII$ZO$....:+7III????????III77$$Z$                    
+                      .$II??7  .+.,D?~7III??????????II777$$ZI                   
+                      =$II??    .,ODO7III???????????III77$$$Z?                  
+                      =$7II?  =, .~O77III????????????II77$$ZZO                  
+                       Z77II,7~$D.,~77III????????????II77$$ZZO                  
+                       .$$777,DO8O.,777III??????????II77$$ZZOO                  
+                        7Z$$7IZDND.:$777III???????IIII77$$ZZOO                  
+                       :I$Z$$7.:O?+I$777IIIIII??IIIII77$$ZZOOO                  
+                       IIIZZZ$I???I7$$77777IIIIIIII777$$ZZZOO7                  
+                       .777Z$77I??I7$$$$777777777777$$$ZZZOOZ                   
+                         .7Z$$=.  ..:I$$$$$$$$7$$$$$$ZZZZOOZ                    
+                          .?7.    ...,+$$$$$$$$$$$ZZZZZZOZ7                     
+                         ?II..    ....:=8$ZZZZZZZZZZZZOZZ,                      
+                        ?II?... . ....,:7MDOZZZZZZZZZZ+.                        
+                        ~77?,.... .....,=DDDDDDDNO~                             
+                          $$:,........,,~~$O88888N7~                            
+                            ~:,,,,,,,,::~~::?ZZO88OI.                           
+                             ,~~:::::::~::,........~:                           
+                              7I~~~~~~~~~~::,,...,:=                            
+                              I7ZZ+~~~~:~+OO+==,:,.                             
+                                ..  .,O8OOOO++==.                               
+             .7I              .=$ZZ?~$77$ZZZ$====~                              
+            .7II7=          =$7777$7IIIIII7II:..,:~.                            
+          ,I?I$$I?II:?I?,  +?+?777IIII77777II?...,,:                            
+          .$7$777$7I777777$$$77III777$$$$7IIII....,,:,                          
+            .IOO$7I?IIIII7777777$$$ZZZO87I???I ...,,::?     ,$7I7I$.            
+            I?I77777IIIIII77$$ZZOO7+DD$III???? ...,,:~IZ..,,77O7?I$.?=          
+            7ZZZZZZZ$7III7$$ZZ8DI??D87III????? ...,,:~=OZ$7II7$7Z~I??7          
+                    $O7I7$ZOIII?IOD87III?????? ...,::~=?O$IIII7$7I7$$.          
+                    7$77$Z88O8DDD8O7II???????? ...,::~==OO7III7$~.              
+                    I7II$OO888888O$II????????+....,:~~=+OOZ$7777,               
+                    7$??$ZZZO888OZ7I?????????,...,,:~=++ :OOZZ7III.             
+                    .$$$ZZ7$ZOOOZ$7III??????~...,,::==+=      IZI?I+            
+                     .$$7777$ZOZ$7I??III7I??...,,:~~=++.        $Z7             
+                      ,?$$$$$ZZZ7I???II7$$,..,,,::~=++:                         
+                       .:IZ$Z$$7II??II7$ZO,,,,::~~=++=                          
+                         ~~~$$77IIIII7$ZZO:::::~====:                           
+                          .=$777III77$ZZO7~~~~~====,                            
+                           .$777II77$ZZOZ+=======,                              
+                         II7777777$$ZZOO++====:.                                
+                       ,III$77777$$ZZOO88OOOO+                                  
+                      IIIII77777$$ZZZO88OOOO                                    
+                     :7IIIII777$ZZOZOOO8OOOO                                    
+                     ~7IIIIIII$ZOOZ8OOOZOOOZ    yoshi scanner                             
+                     .7III77III777$$ZOOZZZ$.                  ohdae [ams]                
+                      ?IIIII7$77$$ZZOOZZZ,      https://github.com/ohdae                           
+                      ?IIIIIIII7ZO88OOOOOZ,          usage: ./yoshi.rb <file name>                      
+                      +IIIIIIII7$$888OOOZ$7$                                    
+                      ?IIIIIIIIII7$Z8OOZ7II7=                                   
+                      ?IIIII??III7$$OO7IIII7+                                   
+                      +7IIIIIIII77$$ZO7IIII7.                                   
+                      .+77IIIII77$$ZOOZ$777:                                    
+                        ++$$777$$ZZ~7$$7I?.                                     
+                          .~????7I.                                             
+                                                            

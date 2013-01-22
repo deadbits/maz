@@ -1,0 +1,58 @@
+= cli.rb =
+@sample_info = {
+    :file_name => :file_name,
+    :file_type => :file_type,
+    :file_size => :file_size,
+    :submitted => :time,
+    :md5_hash  => :md5_hash,
+    :sha1_hash => :sha1_hash,
+    :shadow => {
+        :md5  => @shadow[:md5],
+        :sha1 => @shadow[:sha1],
+        :first => @shadow[:first],
+        :last  => @shadow[:last],
+        :type  => @shadow[:type],
+        :ssdeep => @shadow[:ssdeep],
+        :avres => @shadow[:avres]
+    },
+    :threatex => {},
+    :vtotal => {},
+    :binary => :binary_data,
+}
+
+
+
+    db.mycoll.find().help() - show DBCursor help
+    db.mycoll.count()
+    db.mycoll.dataSize()
+    db.mycoll.distinct( key ) - eg. db.mycoll.distinct( 'x' )
+    db.mycoll.drop() drop the collection
+    db.mycoll.dropIndex(name)
+    db.mycoll.dropIndexes()
+    db.mycoll.ensureIndex(keypattern[,options]) - options is an object with these possible fields: name, unique, dropDups
+    db.mycoll.reIndex()
+    db.mycoll.find([query],[fields]) - query is an optional query filter. fields is optional set of fields to return.
+                                                  e.g. db.mycoll.find( {x:77} , {name:1, x:1} )
+    db.mycoll.find(...).count()
+    db.mycoll.find(...).limit(n)
+    db.mycoll.find(...).skip(n)
+    db.mycoll.find(...).sort(...)
+    db.mycoll.findOne([query])
+    db.mycoll.findAndModify( { update : ... , remove : bool [, query: {}, sort: {}, 'new': false] } )
+    db.mycoll.getDB() get DB object associated with collection
+    db.mycoll.getIndexes()
+    db.mycoll.group( { key : ..., initial: ..., reduce : ...[, cond: ...] } )
+    db.mycoll.mapReduce( mapFunction , reduceFunction , <optional params> )
+    db.mycoll.remove(query)
+    db.mycoll.renameCollection( newName , <dropTarget> ) renames the collection.
+    db.mycoll.runCommand( name , <options> ) runs a db command with the given name where the first param is the collection name
+    db.mycoll.save(obj)
+    db.mycoll.stats()
+    db.mycoll.storageSize() - includes free space allocated to this collection
+    db.mycoll.totalIndexSize() - size in bytes of all the indexes
+    db.mycoll.totalSize() - storage allocated for all data and indexes
+    db.mycoll.update(query, object[, upsert_bool, multi_bool])
+    db.mycoll.validate( <full> ) - SLOW
+    db.mycoll.getShardVersion() - only for use with sharding
+    db.mycoll.getShardDistribution() - prints statistics about data distribution in the cluster
+
