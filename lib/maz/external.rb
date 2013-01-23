@@ -15,7 +15,9 @@ module Maz
     require 'open-uri'
     require 'crack'
     require 'json'
-
+    
+    # the shadow_query and threatx_query functions are taken and minimized (with slight edits)
+    # the from Shadowserver and ThreatExpert ruby gems
     def shadow_query(md5_hash)
       url = URI.parse("http://innocuous.shadowserver.org/api/?query=#{md5_hash}")
       request = Net::HTTP::Get.new("#{url.path}?#{url.query}")

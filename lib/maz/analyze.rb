@@ -43,49 +43,8 @@ module Maz
         :sha1_hash => Digest::SHA1.hexdigest(File.read(file_name)),
       }
     end
-
-    def xor(data)
-      matches = []
-      pattners = [ /http:\/\//, /ftp:\/\//, /\.dll/, /\.exe/ ]
-      0.upto(255) do |key|
-        decoded = data.unpack("C*").map { |e| e ^ key }.pack("C*")
-        matching = []
-        patterns.each do |p|
-          matching << p.source if decoded.match(p)
-        end
-        unless matching.empty?
-          matches << { :key => key, :patterns => matching, :data => decoded }
-        end
-      end
-      return matches
-    end
-
-    def network_strings(line)
-      count = 0
-      calls = ["IRC", "BOT", "JOIN", "flood", "ddos", "NICK", "SERVER", "socket", 
-        "MOTD", "QUIT", "GET", "MODE", "QUIT", "PONG", "PING"]
-      calls.each do |c|
-        if line =~ /#{c}/
-          count += 1
-          @info[:suspicious] = line
-        end
-      end
-      info("found #{count} suspicious network strings!") unless count == 0
-    end
-
-    def system_strings
-      count = 0
-      calls = ["Socket", "http://", "CreateFile.*WRITE", "CreateMutex", "KERNEL32.CreateProcess",
-        "ws2_32.bind", "shdocvw", "advapi32.RegCreate", "IsDebuggerPresent", "FindWindow", "call shell32"]
-      calls.each do |c|
-        if line =~ /#{c}/
-          count += 1
-          @info[:suspicious] = line 
-        end
-      end
-      info("found #{count} suspicious system strings!") unless count == 0
-    end
-
+    
+    # original from Malare project
     def string_analysis
       if self.is_binary?(@info[:file_name])
         lines = File.new(@info[:file_name], "r:ASCII-8BIT")
