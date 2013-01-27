@@ -16,13 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with MAZ.  If not, see <http://www.gnu.org/licenses/>.
 ##
+$:.unshift(File.dirname(__FILE__))
 
 require 'mongo'
 require 'rubygems'
 require 'securerandom'
+require 'pp'
 
 module Maz
-  class Database
+  class Database < Maz::Core
 
     def initialize
       # start new mongodb connection
@@ -30,7 +32,6 @@ module Maz
       # make sure we are in the 'storage' collection.
       @mongo = Mongo::Connection.new
       @mazdb = @mongo.db("maz_db")
-      @report_db = @mazdb["reports"]
       @store_db = @mazdb["storage"]
     end
 
@@ -40,8 +41,6 @@ module Maz
     end
 
     def db_exists?
-      # check if we initialized our db connection
-      # and are currently in the 'storage' collection.
       if @mazdb["storage"]
         return true
       else
@@ -67,8 +66,8 @@ module Maz
           #:ssdeep => @shadow[:ssdeep],
           #:avres => @shadow[:avres]
         #} }
-      entry_id = @store_db.insert(entry)
-      puts "[*] entry accepted for id: #{entry_id}"
+      entry_id = @store_db.insert(data)
+      status("entry accepted for id: #{entry_id}")
     end
 
     def count_all
@@ -81,24 +80,24 @@ module Maz
     end
 
     def stats
-      Core.pgreen("\n\t[ Database Statistics ]")
-      Core.pbwhite("  current time:\t#{Time.now}")
-      Core.pbwhite(" total entries:\t#{Database.count_all}")
-      Core.pbwhite("   most recent:\t#{Database.view_last}")
-      Core.pbwhite("database stats: ")
+      pgreen("\n\t[ Database Statistics ]")
+      pbwhite("\ntotal entries: ")
+      pp count_all
+      pbwhite("\nmost recent: ")
+      pp view_last
+      pbwhite("\ndatabase stats: ")
       @mazdb.stats().each_pair { |k,v| puts "#{k} : #{v}" }
-      Core.pbwhite("storage collection: ")
+      pbwhite("\nstorage collection: ")
       @store_db.stats().each_pair { |k,v| puts "#{k} : #{v}" }
       puts "\n"
     end
 
     def view_last
-      result = @store_db.find_one
-      return result.inspect
+      result = @store_db.find_one.to_a
+      return result
     end
 
     def view_all
-      # returns all records inside the 'storage' collection
       all = {}
       @store_db.find.each do |item|
         puts item.inspect
@@ -107,18 +106,17 @@ module Maz
     end
 
     def search_md5(hash)
-      # puts "searching for MD5 hash #{query}"
-      result = @store_db.find("md5_hash" => "#{hash}")
+      result = @store_db.find("md5_hash" => "#{hash}").to_a
       unless result == []
-        return result.inspect
+        return result
       end
       return nil
     end
 
     def search_sha1(hash)
-      result = @store_db.find("sha1_hash" => "#{hash}")
+      result = @store_db.find("sha1_hash" => "#{hash}").to_a
       unless result == []
-        return result.inspect
+        return result
       end
       return nil
     end

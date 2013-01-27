@@ -17,16 +17,13 @@
 # along with MAZ.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-#require File.expand_path("#{File.dirname __FILE__}/lib/maz")
+require File.expand_path("#{File.dirname __FILE__}" + "/../maz")
 require 'trollop'
 
 module Maz
-  class CLI
-    # TODO
-    # Fix this mess. There has to be a better way!
-    Core = Maz::Core.new
-    Analyze = Maz::Core.new
-    Database = Maz::Database.new
+  class CLI < Maz::Core
+    @@Database = Maz::Database.new
+    @@Analyze = Maz::Analyze.new
 
     def initialize
       opts = Trollop::options do
@@ -51,53 +48,29 @@ module Maz
       end
       # perform some quick error checks on our options and arguments
       if opts[:file]
-        unless File.exists?(opts[:file])
+        if File.exists?(opts[:file])
+          submit(opts[:file])
+        else
           Trollop::die :file, "does not seem to exist"
         end
       elsif opts[:count] and opts[:count].to_i <= 0
         Trollop::die :count, "must be a positive number"
-      elsif opts[:file]
-        submit(opts[:file])
       elsif opts[:query]
-        output = Database.search_md5(opts[:query])
+        output = @@Database.search_md5(opts[:query])
         if output != nil
-          Core.pgreen("\tSearch Results: ")
-          output.each do |entry|
-            Core.pbwhite("#{entry.inspect}")
-          end
+          pgreen("\tSearch Results: ")
+          puts output
         end
       elsif opts[:stats]
-        Database.stats
+        @@Database.stats
       end
     end
 
-    def submit(filename)
-      Core.status("starting analysis of sample: #{filename}")
-      @sample = Analyze.static(filename)
-      @sample[:shadow] = Analyze.get_shadow(@sample[:md5_hash])
-      Core.status("analysis complete. submitting to database ...")
-      Database.create(@sample)
-      report
-    end
-
-    def report
-      Core.pbwhite("\n\t[ Analysis Report ]")
-      puts "File Name:\t#{@sample[:file_name]}"
-      puts "File Type:\t#{@sample[:file_type]}"
-      puts "File Size:\t#{@sample[:file_size]}"
-      puts "Submitted:\t#{@sample[:time]}"
-      puts " MD5 Hash:\t#{@sample[:md5_hash]}"
-      puts "SHA1 Hash:\t#{@sample[:sha1_hash]}"
-      puts "\n"
-      #unless @sample[:shadow] == nil
-      #  puts "First Seen:\t#{@sample[:shadow][:first]}"
-      #  puts " Last Seen:\t#{@sample[:shadow][:last]}"
-      #  puts " File Type:\t#{@sample[:shadow][:type]}"
-      #  puts "Fuzzy Hash:\t#{@sample[:shadow][:ssdeep]}"
-      #  Core.pbwhite("\t[ Anti-Virus ]")
-      #  @sample[:shadow][:avres].each { |av| puts "#{av}"}
-      #  puts "\n"
-      #end
+    def submit(file_name)
+      status("starting analysis of sample: #{file_name}")
+      sample = @@Analyze.submit(file_name)
+      @@Database.create(sample)
+      text_report(sample)
     end
 
   end

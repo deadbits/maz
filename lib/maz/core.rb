@@ -20,22 +20,8 @@
 require 'readline'
 require 'term/ansicolor'
 require 'yaml'
-require File.expand_path("#{File.dirname __FILE__}/database")
-#require File.expand_path("#{File.dirname __FILE__}/lib/maz")
+require 'pp'
 include Term::ANSIColor
-
-ascii = ""
-ascii += "\n\n"                                        
-ascii += "\n\t`7MMM.     ,MMF'      db      MMM###AMV "
-ascii += "\n\t  MMMb    dPMM       ;MM:     M'   AMV  "
-ascii += "\n\t  M YM   ,M MM      ,V^MM.    '   AMV   "
-ascii += "\n\t  M  Mb  M' MM     ,M  `MM       AMV    "
-ascii += "\n\t  M  YM.P'  MM     AbmmmqMA     AMV   , "
-ascii += "\n\t  M  `YM'   MM    A'     VML   AMV   ,M "
-ascii += "\n\t.JML. `'  .JMML..AMA.   .AMMA.AMVmmmmMM "
-ascii += "\n\t  malware analysis zoo => beta version  "
-ascii += "\n\t      https://github.com/ohdae/maz      "
-ascii += "\n\n"
 
 module Maz
   class Core
@@ -70,6 +56,26 @@ module Maz
         return true
       else
         return false
+      end
+    end
+
+    def text_report(sample)
+      pbwhite("\n\t[ Sample Information ]")
+      puts "File Name:\t#{sample[:file_name]}"
+      puts "File Type:\t#{sample[:file_type]}"
+      puts "File Size:\t#{sample[:file_size]}"
+      puts "Submitted:\t#{sample[:time]}"
+      puts " MD5 Hash:\t#{sample[:md5_hash]}"
+      puts "SHA1 Hash:\t#{sample[:sha1_hash]}"
+      puts "\n"
+      unless sample[:shadow] == nil
+        puts "First Seen:\t#{sample[:shadow][:first]}"
+        puts " Last Seen:\t#{sample[:shadow][:last]}"
+        puts " File Type:\t#{sample[:shadow][:type]}"
+        puts "Fuzzy Hash:\t#{sample[:shadow][:ssdeep]}"
+        pbwhite("\t[ Anti-Virus ]")
+        sample[:shadow][:avres].each { |av| pp "#{av}"}
+        puts "\n"
       end
     end
 

@@ -17,13 +17,11 @@
 # along with MAZ.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-require File.expand_path("#{File.dirname __FILE__}/core")
-require File.expand_path("#{File.dirname __FILE__}/external")
 require 'digest/md5'
 require 'digest/sha1'
 
 module Maz
-  class Analyze
+  class Analyze < Maz::External
 
     def is_binary?(file)
       if File.exists?(file) && File.executable?(file)
@@ -43,6 +41,12 @@ module Maz
         :sha1_hash => Digest::SHA1.hexdigest(File.read(file_name)),
       }
     end
+
+    def submit(file_name)
+      sample = static(file_name)
+      sample[:shadow] = get_shadow([:md5_hash])
+      return sample
+    end
     
     # original from Malare project
     def string_analysis
@@ -58,18 +62,15 @@ module Maz
 
     def get_shadow(hash)
       # query and retrieve shadowserver info
-      external = Maz::External.new
-      return external.shadow_query(hash)
+      return shadow_query(hash)
     end
 
     def get_anubis
-      # submit and retrieve anubis report
       nil
     end
 
     def get_threatex(hash)
-      external = Maz::External.new
-      return external.threatx_query(hash)
+      return threatx_query(hash)
     end
 
   end

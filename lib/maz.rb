@@ -17,15 +17,18 @@
 # along with MAZ.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-$LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + '/maz')
+$:.unshift(File.dirname(__FILE__))
 
-require 'core'
-require 'external'
-require 'database'
-require 'analyze'
-require 'cli'
+require 'maz/core'
+require 'maz/database'
+require 'maz/external'
+require 'maz/analyze'
+require 'maz/console'
+require 'maz/cli'
 
-VERSION = "0.5 beta"
-APPNAME = "Malware Analysis Zoo"
-SHORT   = "MAZ"
+module Maz
+  VERSION = "0.5 beta"
+  APPNAME = "Malware Analysis Zoo"
+  SHORT   = "MAZ"
+end
 
