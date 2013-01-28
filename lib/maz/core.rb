@@ -28,7 +28,7 @@ module Maz
 
     def initialize
       @@Database = Maz::Database.new
-      status("checking MAZ environment ...")
+      #status("checking MAZ environment ...")
       unless File.directory?("#{ENV['HOME']}/maz")
         puts "This looks like your first time running MAZ. Starting setup ..."
         status("creating environment directories ...")
@@ -37,7 +37,7 @@ module Maz
         Dir.mkdir("#{ENV['HOME']}/maz/logs")
         info("environment created.")
       end
-      info("environment ok.\n")
+      #info("environment ok.\n")
     end
 
     def shutdown
