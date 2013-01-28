@@ -63,6 +63,7 @@ module Maz
       puts "File Name:\t#{sample[:file_name]}"
       puts "File Type:\t#{sample[:file_type]}"
       puts "File Size:\t#{sample[:file_size]}"
+      puts " Location:\t#{sample[:location]}"
       puts "Submitted:\t#{sample[:time]}"
       puts " MD5 Hash:\t#{sample[:md5_hash]}"
       puts "SHA1 Hash:\t#{sample[:sha1_hash]}"

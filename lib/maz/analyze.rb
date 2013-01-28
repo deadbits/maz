@@ -33,9 +33,10 @@ module Maz
 
     def static(file_name)
       @info = {
-        :file_name => file_name,
+        :file_name => File.basename(file_name),
         :file_type => `file -b #{file_name}`.chomp,
         :file_size => File.size?(file_name),
+        :location => file_name,
         :time => Time.now,
         :md5_hash => Digest::MD5.hexdigest(File.read(file_name)),
         :sha1_hash => Digest::SHA1.hexdigest(File.read(file_name)),
@@ -51,8 +52,8 @@ module Maz
     
     # original from Malare project
     def string_analysis
-      if self.is_binary?(@info[:file_name])
-        lines = File.new(@info[:file_name], "r:ASCII-8BIT")
+      if self.is_binary?(@info[:location])
+        lines = File.new(@info[:location], "r:ASCII-8BIT")
         lines.readlines.each do |line|
           network_strings(line)
           registry_strings(line)
