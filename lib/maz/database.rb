@@ -30,7 +30,7 @@ module Maz
       # start new mongodb connection
       # make sure our database and collections exist.
       # make sure we are in the 'storage' collection.
-      status("initializing mongodb ...")
+      #status("initializing mongodb ...")
       @mongo = Mongo::Connection.new
       @mazdb = @mongo.db("maz_db")
       @store_db = @mazdb["storage"]
