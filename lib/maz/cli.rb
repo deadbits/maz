@@ -22,7 +22,7 @@ require 'trollop'
 
 module Maz
   class CLI < Maz::Core
-    @@Database = Maz::Database.new
+    #@@Database = Maz::Database.new
     @@Analyze = Maz::Analyze.new
 
     def initialize
@@ -56,10 +56,10 @@ module Maz
       elsif opts[:count] and opts[:count].to_i <= 0
         Trollop::die :count, "must be a positive number"
       elsif opts[:query]
-        output = @@Database.search_md5(opts[:query])
-        if output != nil
-          pgreen("\tSearch Results: ")
-          puts output
+        result = @@Database.search_md5(opts[:query])
+        unless result == nil
+          pbwhite("\tSearch Results: ")
+          pp result
         end
       elsif opts[:stats]
         @@Database.stats

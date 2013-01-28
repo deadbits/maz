@@ -34,11 +34,12 @@ module Maz
     def static(file_name)
       @info = {
         :file_name => file_name,
-        :file_type => `file #{file_name}`.chomp,
+        :file_type => `file -b #{file_name}`.chomp,
         :file_size => File.size?(file_name),
         :time => Time.now,
         :md5_hash => Digest::MD5.hexdigest(File.read(file_name)),
         :sha1_hash => Digest::SHA1.hexdigest(File.read(file_name)),
+        :strings => `strings #{file_name}`.split("\n")
       }
     end
 

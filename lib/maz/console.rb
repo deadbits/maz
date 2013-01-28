@@ -13,6 +13,7 @@ require File.expand_path("#{File.dirname __FILE__}" + "/../maz")
 module Maz
   class Console < Maz::Core
     @@Analyze = Maz::Analyze.new
+    #@@Database = Maz::Database.new
     @commands = [ "help", "report", "search", "recent", "exit", "quit", "load", "analyze",
       "cuckoo", "anubis", "vtotal", "threatx" ]
 
@@ -20,14 +21,15 @@ module Maz
       puts %{
 
         for full support, review the files in the 'docs' directory.
-        in this menu, '[sample]' refers to any of the following:
-        md5 hash - sha256 hash - filename - mID
 
      :::General Commands:::
-      help                         -   display this menu
+        help                       -   display this menu
       report [html/txt] [sample]   -   generate report on [sample]
-      search [sample]              -   query database for [sample]
+      search [type] [data]         -   query db for [md5/name] of [data]
       recent [count]               -   show [count] most recent submissions
+      delete [sample md5]          -   remove [sample] from database completely
+       stats                       -   display database statistics
+       clear                       -   clears the console screen
         exit                       -   shutdown the MAZ console
      
       :::Analysis Commands:::
@@ -40,39 +42,60 @@ module Maz
       }
     end
 
-    #def dispatch(command, *args)
-    #  @command.each_pair do |cmd, func|
-    #    if cmd =~ /command/
-    #      Maz::Core.status("executing ...")
-    #      execute.func(*args)
-    #    end
-    #  end
-    #end
-
     def initialize
-      comp = proc { |s| @commands.grep ( /^#{Regexp.escape(s)}/ ) }
-      Readline.completion_append_character = " "
-      Readline.completion_proc = comp
-
-      while cmd = Readline.readline("maz >> ", true).chomp
+      Core.new
+      pbwhite("\tMalware Analysis Zoo ::: interactive console")
+      pbwhite("\thttps://github.com/ohdae/maz - MAZ (c) 2013")
+      pbwhite("\ttype 'help' to view all available commands.\n")
+      prompt = white(bold("maz >> "))
+      while cmd = Readline.readline("#{prompt}", true).chomp
         if cmd == "exit"
-          status("shutting down MAZ console ...")
-          exit
+          shutdown
+        elsif cmd == "quit"
+          shutdown
         elsif cmd == "help"
           help_menu
+        elsif cmd == "clear"
+          system("clear")
         elsif cmd.include?("search")
-          query = cmd.split(" ")[1]
-          result = @@Database.search_file(query)
-          unless result == nil
-            puts "Search Result: #{result}"
+          type = cmd.split(" ")[1]
+          query = cmd.split(" ")[2]
+          if type == "md5"
+            result = @@Database.search_md5(query)
+            unless result == nil
+              pbwhite("Search Results: ")
+              pp result
+            end
+          elsif type == "name"
+            result = @@Database.search_file(query)
+            unless result == nil
+              pbwhite("Search Results: ")
+              pp result
+            end
           end
         elsif cmd == "stats"
           @@Database.stats
+        elsif cmd.include?("delete")
+          entry = cmd.split(" ")[1].chomp
+          status("removing database entry belonging to md5 hash: #{entry}")
+          puts @@Database.delete_entry(entry)
         elsif cmd.include?("analyze")
           filename = cmd.split(" ")[1].chomp
-          analyze(filename)
+          status("starting analysis of sample: #{filename}")
+          sample = @@Analyze.submit(filename)
+          status("submitting to database ...")
+          @@Database.create(sample)
+          text_report(sample)
+        elsif cmd.include?("load")
+          path = cmd.split(" ")[1].chomp
+          if File.directory?(path)
+            @queue = load_directory(path)
+          elsif File.exist?(path)
+            status("loading sample: #{path}")
+            @queue = path
+          end
         else
-          error("command #{cmd} is not yet available.")
+          error("command #{cmd} is not a valid entry.")
         end
       end
     end

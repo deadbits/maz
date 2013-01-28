@@ -27,6 +27,7 @@ module Maz
   class Core
 
     def initialize
+      @@Database = Maz::Database.new
       status("checking MAZ environment ...")
       unless File.directory?("#{ENV['HOME']}/maz")
         puts "This looks like your first time running MAZ. Starting setup ..."
@@ -40,6 +41,12 @@ module Maz
       info("environment ok.\n")
     end
 
+    def shutdown
+      status("shutting down MAZ ...")
+      @@Database.close
+      exit
+    end
+
     #def load_config(file)
     #  unless File.exists?(file) = false
     #    error("configuration file #{file} was not found")
@@ -50,14 +57,6 @@ module Maz
     #  @config = YAML.load(raw)
     #  return true
     #end
-
-    def is_binary?(file)
-      if File.exists?(file) and File.executable?(file)
-        return true
-      else
-        return false
-      end
-    end
 
     def text_report(sample)
       pbwhite("\n\t[ Sample Information ]")
@@ -100,14 +99,6 @@ module Maz
       puts red(bold("[!] #{msg}"))
     end
 
-    def pblue(msg)
-      puts blue("#{msg}")
-    end
-
-    def pred(msg)
-      puts red("#{msg}")
-    end
-
     def pgreen(msg)
       puts green("#{msg}")
     end
@@ -117,11 +108,11 @@ module Maz
     end
 
     def status(msg)
-      puts blue(bold("[~] #{msg}"))
+      puts blue("[*] #{msg}")
     end
 
     def info(msg)
-      puts white(bold("[*] #{msg}"))
+      puts white("[-] #{msg}")
     end
 
   end # end of class

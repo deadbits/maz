@@ -30,14 +30,15 @@ module Maz
       # start new mongodb connection
       # make sure our database and collections exist.
       # make sure we are in the 'storage' collection.
+      status("initializing mongodb ...")
       @mongo = Mongo::Connection.new
       @mazdb = @mongo.db("maz_db")
       @store_db = @mazdb["storage"]
     end
 
     def close
-      @store_db.connection.close
-      @report_db.connection.close
+      @store_db.close
+      @report_db.close
     end
 
     def db_exists?
@@ -105,6 +106,14 @@ module Maz
       return all
     end
 
+    def delete_entry(hash)
+      result = @store_db.remove("md5_hash" => "#{hash}")
+      unless result == []
+        return result
+      end
+      return nil
+    end
+
     def search_md5(hash)
       result = @store_db.find("md5_hash" => "#{hash}").to_a
       unless result == []
@@ -122,9 +131,9 @@ module Maz
     end
 
     def search_file(file_name)
-      result = @store_db.find("file_name" => "#{file_name}")
+      result = @store_db.find("file_name" => "#{file_name}").to_a
       unless result == []
-        return result.inspect
+        return result
       end
       return nil
     end
