@@ -31,6 +31,28 @@ module Maz
       end
     end
 
+    def strings(file)
+      result = {}
+      output = `strings -a -tx #{file}`.split("\n")
+      output.each do |line|
+        offset = line.split(" ")[0].to_s
+        ascii = line.split(" ")[1].to_s
+        result["#{offset}"] = "#{ascii}"
+      end
+      return result
+    end
+
+    def store_file
+      storage = "#{ENV['HOME']}/maz/samples"
+      if File.directory?(storage)
+        full = "#{storage}/#{@info[:file_name].chomp(File.extname(@info[:file_name]))}"
+        path = "#{full}_#{@info[:md5_hash]}"
+        Dir.mkdir(path)
+        `cp #{@info[:location]} #{path}`
+        return path
+      end
+    end
+
     def static(file_name)
       @info = {
         :file_name => File.basename(file_name),
@@ -40,40 +62,28 @@ module Maz
         :time => Time.now,
         :md5_hash => Digest::MD5.hexdigest(File.read(file_name)),
         :sha1_hash => Digest::SHA1.hexdigest(File.read(file_name)),
-        :strings => `strings #{file_name}`.split("\n")
+        :strings => strings(file_name),
+        :shadow => shadow_query(Digest::MD5.hexdigest(File.read(file_name)))
       }
     end
 
     def submit(file_name)
       sample = static(file_name)
-      sample[:shadow] = get_shadow([:md5_hash])
-      return sample
+      stored = store_file
+      return sample, stored
     end
     
     # original from Malare project
-    def string_analysis
-      if self.is_binary?(@info[:location])
-        lines = File.new(@info[:location], "r:ASCII-8BIT")
-        lines.readlines.each do |line|
-          network_strings(line)
-          registry_strings(line)
-          system_strings(line)
-        end
-      end
-    end
-
-    def get_shadow(hash)
-      # query and retrieve shadowserver info
-      return shadow_query(hash)
-    end
-
-    def get_anubis
-      nil
-    end
-
-    def get_threatex(hash)
-      return threatx_query(hash)
-    end
+    #def string_analysis
+    #  if self.is_binary?(@info[:location])
+    #    lines = File.new(@info[:location], "r:ASCII-8BIT")
+    #    lines.readlines.each do |line|
+    #      network_strings(line)
+    #      registry_strings(line)
+    #      system_strings(line)
+    #    end
+    #  end
+    #end
 
   end
 end

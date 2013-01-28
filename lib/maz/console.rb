@@ -82,7 +82,8 @@ module Maz
         elsif cmd.include?("analyze")
           filename = cmd.split(" ")[1].chomp
           status("starting analysis of sample: #{filename}")
-          sample = @@Analyze.submit(filename)
+          sample, stored = @@Analyze.submit(filename)
+          info("sample copied to storage directory: #{stored}")
           status("submitting to database ...")
           @@Database.create(sample)
           text_report(sample)

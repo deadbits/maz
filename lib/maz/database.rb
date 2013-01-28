@@ -36,11 +36,6 @@ module Maz
       @store_db = @mazdb["storage"]
     end
 
-    def close
-      @store_db.close
-      @report_db.close
-    end
-
     def db_exists?
       if @mazdb["storage"]
         return true

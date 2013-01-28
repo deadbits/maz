@@ -33,9 +33,8 @@ module Maz
         puts "This looks like your first time running MAZ. Starting setup ..."
         status("creating environment directories ...")
         Dir.mkdir("#{ENV['HOME']}/maz")
-        Dir.mkdir("#{ENV['HOME']}/maz/storage")
+        Dir.mkdir("#{ENV['HOME']}/maz/samples")
         Dir.mkdir("#{ENV['HOME']}/maz/logs")
-        `touch #{ENV['HOME']}/.maz_history`
         info("environment created.")
       end
       info("environment ok.\n")
@@ -43,7 +42,6 @@ module Maz
 
     def shutdown
       status("shutting down MAZ ...")
-      @@Database.close
       exit
     end
 
@@ -67,12 +65,11 @@ module Maz
       puts "Submitted:\t#{sample[:time]}"
       puts " MD5 Hash:\t#{sample[:md5_hash]}"
       puts "SHA1 Hash:\t#{sample[:sha1_hash]}"
-      puts "\n"
       unless sample[:shadow] == nil
+        pbwhite("\t[ ShadowServer Results ]")
         puts "First Seen:\t#{sample[:shadow][:first]}"
         puts " Last Seen:\t#{sample[:shadow][:last]}"
         puts " File Type:\t#{sample[:shadow][:type]}"
-        puts "Fuzzy Hash:\t#{sample[:shadow][:ssdeep]}"
         pbwhite("\t[ Anti-Virus ]")
         sample[:shadow][:avres].each { |av| pp "#{av}"}
         puts "\n"

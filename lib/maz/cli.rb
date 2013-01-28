@@ -22,7 +22,7 @@ require 'trollop'
 
 module Maz
   class CLI < Maz::Core
-    #@@Database = Maz::Database.new
+    @@Database = Maz::Database.new
     @@Analyze = Maz::Analyze.new
 
     def initialize
