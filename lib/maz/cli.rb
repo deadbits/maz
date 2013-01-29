@@ -22,7 +22,7 @@ require 'trollop'
 
 module Maz
   class CLI < Maz::Core
-    @@Database = Maz::Database.new
+    #@@Database = Maz::Database.new
     @@Analyze = Maz::Analyze.new
 
     def initialize
@@ -43,34 +43,44 @@ module Maz
         opt :file, "Sample file path to analyze and submit", :type => String
         opt :report, "Display text report after analysis", :default => true
         opt :query, "Search MAZ database for MD5 hash", :type => String
-        opt :count, "Display last [count] submissions", :type => Integer
+        opt :recent, "Display last [count] submissions", :type => Integer
         opt :stats, "Show statistics on indexed samples and database entries", :default => false
       end
-      # perform some quick error checks on our options and arguments
+
       if opts[:file]
         if File.exists?(opts[:file])
           submit(opts[:file])
         else
           Trollop::die :file, "does not seem to exist"
         end
-      elsif opts[:count] and opts[:count].to_i <= 0
-        Trollop::die :count, "must be a positive number"
+
+      elsif opts[:recent]
+        last = @@Database.view_last
+        pbwhite("\nLast Submission: ")
+        pp last
+
       elsif opts[:query]
         result = @@Database.search_md5(opts[:query])
         unless result == nil
-          pbwhite("\tSearch Results: ")
+          pbwhite("\nSearch Results: ")
           pp result
         end
+
       elsif opts[:stats]
         @@Database.stats
       end
+
     end
 
     def submit(file_name)
-      status("starting analysis of sample: #{file_name}")
-      sample = @@Analyze.submit(file_name)
+      status("\nstarting analysis of sample: #{file}")
+      sample, stored = @@Analyze.submit(file_name)
+      info("sample copied to storage directory: #{stored}")
+      status("submitting to database ...")
       @@Database.create(sample)
-      text_report(sample)
+      unless opts[:report] == false
+        text_report(sample)
+      end
     end
 
   end

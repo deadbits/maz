@@ -19,9 +19,9 @@
 
 module Maz
   class External
+    require 'socket'
     require 'net/http'
     require 'nokogiri'
-    require 'uri'
     require 'open-uri'
     require 'crack'
     require 'json'
@@ -54,13 +54,9 @@ module Maz
 
     def threatx_query(md5_hash)
       url = "http://www.threatexpert.com/report.aspx?md5=#{md5_hash}&xml=1"
-      request = Net::HTTP::Get.new("#{url.path}?#{url.query}")
-      http = Net::HTTP.new(url.host, url.port)
-      req = http.request(request)
-      unless req.body.include?("<status>not_found</status>")
-        result = req.body
-        final = Crack::XML.parse(result)
-        return final
+      page = open(url).read
+      unless page.include?("<status>not_found</status>")
+        return Crack::XML.parse(page)
       end
       return nil
     end
