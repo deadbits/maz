@@ -34,6 +34,7 @@ module Maz
       :::Analysis Commands:::
         load [file/directory]      -   add [file] or [directory] to queue
      analyze [file]                -   analyze [file], report and submit to database
+         tag [sample] [tags]       -   add custom tags to [sample] in db. use comma separated tags
       cuckoo [sample]              -   spin up [sample] in Cuckoo instance
       anubis [sample]              -   submit [sample] to Anubis and get report 
       vtotal [sample]              -   submit [sample] to VirusTotal and get report
@@ -84,6 +85,14 @@ module Maz
       end
     end
 
+    def manage_tags(sample, tags)
+      # placeholder for tag management function
+      # might add this function to either the core
+      # or database.rb library since it can be used
+      # through-out the application
+      nil
+    end
+
     def initialize
       Core.new
       pbwhite("\tMalware Analysis Zoo ::: interactive console")
@@ -103,7 +112,16 @@ module Maz
           help_menu
         elsif cmd == "clear"
           system("clear")
-          
+
+        elsif cmd.include?("tag")
+          pbwhite("This feature lets you add custom tags to samples stored in the MAZ database.")
+          pbwhite("Tags are a great way to identify, and later search for, samples.")
+          pbwhite("Enter your tags after the sample's name or md5 hash in a comma separated format.")
+          pbwhite("example: tag flashback.exe flashback, osx, backdoor")
+          sample = cmd.split(" ")[1]
+
+
+
         elsif cmd == "recent"
           last = @@Database.view_last
           pbwhite("Last Submission: ")

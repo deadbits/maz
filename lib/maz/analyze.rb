@@ -23,6 +23,15 @@ require 'digest/sha1'
 module Maz
   class Analyze < Maz::External
 
+    @network_strings = [ "IRC", "http", "InternetReadFile", "Connect", "JOIN", "NICK",
+      "port", "host", "PING", "PONG", "gethostbyname", "Socket", "bind", "listen", "download",
+      ".exe", "Request" ]
+
+    @system_strings = [ "OpenProcess", "VirtualAllocEx", "StartService", "CreateRemoteThread",
+      "CreateProcess", "WinExec", "ReadProcessMemory", "ShellExecute", "cmd.exe", "StartService",
+      "FindWindow", "shell32", "CreateMutex", "RegCreate", "RegSet", "RegOpenKey", "IsDebuggerPresent",
+      "HKEY", "Admin"]
+
     def is_binary?(file)
       if File.exists?(file) && File.executable?(file)
         return true
@@ -73,17 +82,27 @@ module Maz
       return sample, stored
     end
     
-    # original from Malare project
-    #def string_analysis
-    #  if self.is_binary?(@info[:location])
-    #    lines = File.new(@info[:location], "r:ASCII-8BIT")
-    #    lines.readlines.each do |line|
-    #      network_strings(line)
-    #      registry_strings(line)
-    #      system_strings(line)
-    #    end
-    #  end
-    #end
+    def scan_strings
+      found = {}
+      lines = File.open(@info[:location], "r:ASCII-8BIT")
+      lines.readlines.each do |line|
+        @network_strings.each do |n|
+          if line.include?(n)
+            info("found string #{n} in sample #{@info[:file_name]}")
+            found[n] = line.to_s
+          end
+        end
+        @system_strings.each do |s|
+          if line.include?(s)
+            info("found string #{n} in sample #{@info[:file_name]}")
+            found[s] = line.to_s
+          end
+        end
+      end
+      unless found == {}
+        @info[:ascii_sigs] = found
+      end
+    end
 
   end
 end
