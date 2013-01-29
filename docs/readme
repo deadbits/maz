@@ -1,32 +1,80 @@
 = maz
-
-* http://github.com/#{github_username}/#{project_name}
+* https://github.com/ohdae/maz
+* created by ohdae [adam m. swanda] - 2013
 
 == DESCRIPTION:
 
-FIX (describe your package)
+MAZ, or the Malware Analysis Zoo, is a Ruby based platform to perform malware analysis, storage, reporting,
+IOC generation and 3rd party sample submissions. 
 
-== FEATURES/PROBLEMS:
+== FEATURES:
 
-* FIX (list of features or problems)
+* Applications
+  - Interactive console application
+  - Command line interface
+  - 'Mini.rb' for quick analysis
+  - MAZWeb - sinatra based web interface
+* Static malware analysis
+  - MD5 hashing
+  - SHA1 hashing
+  - File size
+  - File type
+  - Time submitted
+  - File name
+  - Custom tags
+* External analysis
+  - ShadowServer
+  - ThreatExpert
+  - Anubis (dynamic analysis)
+  - VirusTotal
+  - Cuckoo Box integration (dynamic analysis)
+* Storage
+  - MongoDB back-end
+  - Submit samples for storage
+  - Search for samples by name, md5 hash or custom tags
+* Report generation
+  - Text/HTML/XML reports
+* IOC generation
+  - generate an XML file containing Indicators of Compromise
+    from any stored and analyzed sample
+
+[ this section needs to be updated to reflect all available features and plugins ]
+
 
 == SYNOPSIS:
 
-  FIX (code sample of usage)
+  * Command line interface:
+      Analyze file, submit to db and return text report
+        ./cli.rb --file ~/Downloads/malware.exe
+      Query database for sample information and return text report
+        ./cli.rb --query flashback-2.exe --report
+      Retrieve database and collection statistics
+        ./cli.rb --stats      
   
   == REQUIREMENTS:
   
-  * FIX (list of requirements)
+  Ruby requirements:
+    * ruby 1.9.3
+    * readline support
+    * mongodb gem
+    * trollop gem
+    * term/ansicolor gem
+
+  Local requirements:
+    * mongodb server
   
   == INSTALL:
   
-  * FIX (sudo gem install, anything else)
+  * To install Maz, you can run the install.rb script in the 'bin' directory. You do not need to
+    install MAZ to actually utilize the functionality. Although, the installation process will give
+    you some additional benefits such as installing MAZ as a system service, standardized storage
+    and logging locations and more. For full details, please review the INSTALL documentation file.
   
   == LICENSE:
   
   (The MIT License)
   
-  Copyright (c) 2013 ohdae
+  Copyright (c) 2013 ohdae [adam m. swanda]
   
   Permission is hereby granted, free of charge, to any person obtaining
   a copy of this software and associated documentation files (the
@@ -45,4 +93,4 @@ FIX (describe your package)
   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
   CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.%    
+  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  
