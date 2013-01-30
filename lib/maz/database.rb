@@ -71,10 +71,6 @@ module Maz
       return count
     end
 
-    def remove(query)
-      return @store_db.remove(query)
-    end
-
     def stats
       pgreen("\n\t[ Database Statistics ]")
       pbwhite("\ntotal entries: ")
@@ -101,36 +97,31 @@ module Maz
       return all
     end
 
-    def delete_entry(hash)
-      result = @store_db.remove("md5_hash" => "#{hash}")
-      unless result == []
-        return result
+    def delete_entry(type, query)
+      if type == "file"
+        result = @store_db.remove("file_name" => "#{query}")
+      elsif type == "md5"
+        result = @store_db.remove("md5_hash" => "#{query}")
+      elsif type == "sha1"
+        result = @store_db.remove("sha1_hash" => "#{query}")
       end
-      return nil
+      return result
     end
 
-    def search_md5(hash)
-      result = @store_db.find("md5_hash" => "#{hash}").to_a
-      unless result == []
-        return result
+    def search(type, query)
+      # NOTES
+      # raw mongo shell query for excluding fields from search results is:
+      # db.products.find( { qty: { $gt: 25 } }, { _id: 0, qty: 0 } )
+      # not sure if I can do the same via mongo gem but it should look something
+      # like this: @store_db.find("file_name" => "#{query}", "_id" => 0, "strings" => 0)
+      if type == "file"
+        result = @store_db.find("file_name" => "#{query}").to_a
+      elsif type == "md5"
+        result = @store_db.find("md5_hash" => "#{query}").to_a
+      elsif type == "sha1"
+        result = @store_db.find("sha1_hash" => "#{query}").to_a
       end
-      return nil
-    end
-
-    def search_sha1(hash)
-      result = @store_db.find("sha1_hash" => "#{hash}").to_a
-      unless result == []
-        return result
-      end
-      return nil
-    end
-
-    def search_file(file_name)
-      result = @store_db.find("file_name" => "#{file_name}").to_a
-      unless result == []
-        return result
-      end
-      return nil
+      return result
     end
 
   end
