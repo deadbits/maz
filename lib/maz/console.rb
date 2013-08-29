@@ -60,7 +60,7 @@ module Maz
     end
 
     def analyze(input)
-      file = cmd.split(" ")[1].chomp
+      file = input.split(" ")[1].chomp
       if File.exist?(file)
         status("starting analysis of sample: #{file}")
         sample, stored = @@Analyze.submit(file)
@@ -114,13 +114,12 @@ module Maz
           system("clear")
 
         elsif cmd.include?("tag")
-          pbwhite("This feature lets you add custom tags to samples stored in the MAZ database.")
-          pbwhite("Tags are a great way to identify, and later search for, samples.")
-          pbwhite("Enter your tags after the sample's name or md5 hash in a comma separated format.")
-          pbwhite("example: tag flashback.exe flashback, osx, backdoor")
-          sample = cmd.split(" ")[1]
-
-
+          #pbwhite("This feature lets you add custom tags to samples stored in the MAZ database.")
+          #pbwhite("Tags are a great way to identify, and later search for, samples.")
+          #pbwhite("Enter your tags after the sample's name or md5 hash in a comma separated format.")
+          #pbwhite("example: tag flashback.exe flashback, osx, backdoor")
+          #sample = cmd.split(" ")[1]
+          puts "feature not yet implemented."
 
         elsif cmd == "recent"
           last = @@Database.view_last
