@@ -22,11 +22,11 @@ require 'trollop'
 
 module Maz
   class CLI < Maz::Core
-    #@@Database = Maz::Database.new
+    @@Database = Maz::Database.new
     @@Analyze = Maz::Analyze.new
 
     def initialize
-      opts = Trollop::options do
+      @opts = Trollop::options do
         version = "beta version 0.5 (c) 2013 - Adam M. Swanda"
         banner <<-EOS
       Malware Analysis Zoo :: command line interface 
@@ -47,26 +47,26 @@ module Maz
         opt :stats, "Show statistics on indexed samples and database entries", :default => false
       end
 
-      if opts[:file]
-        if File.exists?(opts[:file])
-          submit(opts[:file])
+      if @opts[:file]
+        if File.exists?(@opts[:file])
+          submit(@opts[:file])
         else
           Trollop::die :file, "does not seem to exist"
         end
 
-      elsif opts[:recent]
+      elsif @opts[:recent]
         last = @@Database.view_last
         pbwhite("\nLast Submission: ")
         pp last
 
-      elsif opts[:query]
-        result = @@Database.search_md5(opts[:query])
+      elsif @opts[:query]
+        result = @@Database.search_md5(@opts[:query])
         unless result == nil
           pbwhite("\nSearch Results: ")
           pp result
         end
 
-      elsif opts[:stats]
+      elsif @opts[:stats]
         @@Database.stats
       end
 
@@ -78,22 +78,10 @@ module Maz
       info("sample copied to storage directory: #{stored}")
       status("submitting to database ...")
       @@Database.create(sample)
-      unless opts[:report] == false
+      unless @opts[:report] == false
         text_report(sample)
       end
     end
 
   end
 end
-
-
-
-
-
-
-
-
-
-
-
-
