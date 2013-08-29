@@ -42,7 +42,7 @@ module Maz
 
     def strings(file)
       result = {}
-      output = `strings -a -tx #{file}`.split("\n")
+      output = `strings -a -t x #{file}`.split("\n")
       output.each do |line|
         offset = line.split(" ")[0].to_s
         ascii = line.split(" ")[1].to_s
