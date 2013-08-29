@@ -73,7 +73,7 @@ module Maz
     end
 
     def submit(file_name)
-      status("\nstarting analysis of sample: #{file}")
+      status("\nstarting analysis of sample: #{file_name}")
       sample, stored = @@Analyze.submit(file_name)
       info("sample copied to storage directory: #{stored}")
       status("submitting to database ...")
