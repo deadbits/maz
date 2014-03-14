@@ -27,15 +27,14 @@ module Maz
 
     def initialize
       @opts = Trollop::options do
-        version = "beta version 0.5 (c) 2013 - Adam M. Swanda"
+        version = "beta version 0.5 (c) 2013 - ams"
         banner <<-EOS
-      Malware Analysis Zoo :: command line interface 
+      Malware Analysis Zoo :: command line interface
       website:  https://github.com/ohdae/maz
 
       maz-cli.rb is for quick analysis and sample submissions. all samples
       you submit through this script will be analyzed, stored in the maz database
-      and reports will be generated and saved. for more fine tuned control over
-      your maz experience, check out the maz-console.rb application.
+      and reports will be generated.
 
       Usage: maz-cli [options] [args]
       Options:
@@ -49,7 +48,7 @@ module Maz
 
       if @opts[:file]
         if File.exists?(@opts[:file])
-          submit(@opts[:file])
+          @@Analyze.submit(@opts[:file])
         else
           Trollop::die :file, "does not seem to exist"
         end
@@ -72,16 +71,20 @@ module Maz
 
     end
 
-    def submit(file_name)
-      status("\nstarting analysis of sample: #{file_name}")
-      sample, stored = @@Analyze.submit(file_name)
-      info("sample copied to storage directory: #{stored}")
-      status("submitting to database ...")
-      @@Database.create(sample)
-      unless @opts[:report] == false
-        text_report(sample)
-      end
-    end
+    #def submit(file_name)
+    #  status("\nstarting analysis of sample: #{file_name}")
+    #  sample, stored = @@Analyze.submit(file_name)
+    #  if sample == false or stored == false
+    #    error("error attempting to analyze file: #{file_name}")
+    #    exit
+    #  end
+    #  info("sample copied to storage directory: #{stored}")
+    #  status("submitting to database ...")
+    #  @@Database.insert(sample)
+    #  unless @opts[:report] == false
+    #    Maz::Report.text_report(sample)
+    #  end
+    #end
 
   end
 end

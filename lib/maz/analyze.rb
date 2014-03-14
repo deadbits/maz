@@ -19,18 +19,14 @@
 
 require 'digest/md5'
 require 'digest/sha1'
+require 'net/http'
+require 'nokogiri'
+require 'open-uri'
+require 'crack'
+require 'json'
 
 module Maz
-  class Analyze < Maz::External
-
-    @network_strings = [ "IRC", "http", "InternetReadFile", "Connect", "JOIN", "NICK",
-      "port", "host", "PING", "PONG", "gethostbyname", "Socket", "bind", "listen", "download",
-      ".exe", "Request" ]
-
-    @system_strings = [ "OpenProcess", "VirtualAllocEx", "StartService", "CreateRemoteThread",
-      "CreateProcess", "WinExec", "ReadProcessMemory", "ShellExecute", "cmd.exe", "StartService",
-      "FindWindow", "shell32", "CreateMutex", "RegCreate", "RegSet", "RegOpenKey", "IsDebuggerPresent",
-      "HKEY", "Admin"]
+  class Analyze < Maz::Core
 
     def is_binary?(file)
       if File.exists?(file) && File.executable?(file)
@@ -52,56 +48,74 @@ module Maz
     end
 
     def store_file
-      storage = "#{ENV['HOME']}/maz/samples"
-      if File.directory?(storage)
-        full = "#{storage}/#{@info[:file_name].chomp(File.extname(@info[:file_name]))}"
-        path = "#{full}_#{@info[:md5_hash]}"
-        Dir.mkdir(path)
-        `cp #{@info[:location]} #{path}`
-        return path
+      storage_path = "#{ENV['HOME']}/maz/samples"
+      if File.directory?(storage_path)
+        stripped = "#{storage_path}/#{@sample[:file_name].chomp(File.extname(@sample[:file_name]))}"
+        new_path = "#{stripped}_#{@sample[:md5_hash]}"
+        if File.directory?(new_path)
+          return false
+        end
+        Dir.mkdir(new_path)
+        `cp #{@sample[:location]} #{new_path}`
+        return new_path
       end
     end
 
     def static(file_name)
-      @info = {
+      @sample = {
         :file_name => File.basename(file_name),
         :file_type => `file -b #{file_name}`.chomp,
         :file_size => File.size?(file_name),
         :location => file_name,
-        :time => Time.now,
+        :time => time,
         :md5_hash => Digest::MD5.hexdigest(File.read(file_name)),
         :sha1_hash => Digest::SHA1.hexdigest(File.read(file_name)),
         :strings => strings(file_name),
-        :shadow => shadow_query(Digest::MD5.hexdigest(File.read(file_name)))
+        :shadow => shadow_query(Digest::MD5.hexdigest(File.read(file_name))),
+        :tags => []
       }
     end
 
     def submit(file_name)
-      sample = static(file_name)
-      stored = store_file
-      return sample, stored
+      if File.exist?(file_name)
+        status("starting analysis of sample: #{file_name}")
+        static(file_name)
+        stored = store_file
+        if stored == false
+          error("sample all ready exists in storage location!\ndid you all ready analyze this file?")
+          return false
+        else
+          status("sample copied to storage location: #{stored}")
+          status("submitting to database")
+          @@Database.insert(@sample)
+        end
+      else
+        error("file #{file_name} cannot be found")
+      end
     end
-    
-    def scan_strings
-      found = {}
-      lines = File.open(@info[:location], "r:ASCII-8BIT")
-      lines.readlines.each do |line|
-        @network_strings.each do |n|
-          if line.include?(n)
-            info("found string #{n} in sample #{@info[:file_name]}")
-            found[n] = line.to_s
-          end
-        end
-        @system_strings.each do |s|
-          if line.include?(s)
-            info("found string #{n} in sample #{@info[:file_name]}")
-            found[s] = line.to_s
-          end
-        end
+
+    def shadow_query(md5_hash)
+      url = URI.parse("http://innocuous.shadowserver.org/api/?query=#{md5_hash}")
+      request = Net::HTTP::Get.new("#{url.path}?#{url.query}")
+      http = Net::HTTP.new(url.host, url.port)
+      req = http.request(request)
+      unless req.body.include?("No match found")
+        result = req.body
+        lines = result.split("\n")
+        md5, sha1, first, last, type, ssdeep = lines[0].gsub(/\"/,'').split(/,/)
+        av_results = JSON.parse(lines[1])
+        @shadow_report = {
+          :md5 => md5,
+          :sha1 => sha1,
+          :first => first,
+          :last => last,
+          :type => type,
+          :ssdeep => ssdeep,
+          :avres => av_results
+        }
+        return @shadow_report
       end
-      unless found == {}
-        @info[:ascii_sigs] = found
-      end
+      return nil
     end
 
   end

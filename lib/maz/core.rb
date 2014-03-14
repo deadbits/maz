@@ -28,7 +28,6 @@ module Maz
 
     def initialize
       @@Database = Maz::Database.new
-      #status("checking MAZ environment ...")
       unless File.directory?("#{ENV['HOME']}/maz")
         puts "This looks like your first time running MAZ. Starting setup ..."
         status("creating environment directories ...")
@@ -37,7 +36,15 @@ module Maz
         Dir.mkdir("#{ENV['HOME']}/maz/logs")
         info("environment created.")
       end
-      #info("environment ok.\n")
+    end
+
+    def write!(filename, data)
+      File.open(filename, 'w') { |fout| fout.write(data) }
+    end
+
+    def time
+      now = Time.new
+      return now.utc.strftime("%Y-%m-%d %H:%M:%S")
     end
 
     def shutdown
@@ -45,35 +52,8 @@ module Maz
       exit
     end
 
-    #def load_config(file)
-    #  unless File.exists?(file) = false
-    #    error("configuration file #{file} was not found")
-    #    return false
-    #  end
-    #  path = File.absolute_path(File.dirname($0))+"#{file}"
-    #  raw = File.read(path)
-    #  @config = YAML.load(raw)
-    #  return true
-    #end
-
-    def text_report(sample)
-      pbwhite("\n\t[ Sample Information ]")
-      puts "File Name:\t#{sample[:file_name]}"
-      puts "File Type:\t#{sample[:file_type]}"
-      puts "File Size:\t#{sample[:file_size]}"
-      puts " Location:\t#{sample[:location]}"
-      puts "Submitted:\t#{sample[:time]}"
-      puts " MD5 Hash:\t#{sample[:md5_hash]}"
-      puts "SHA1 Hash:\t#{sample[:sha1_hash]}"
-      unless sample[:shadow] == nil
-        pbwhite("\t[ ShadowServer Results ]")
-        puts "First Seen:\t#{sample[:shadow][:first]}"
-        puts " Last Seen:\t#{sample[:shadow][:last]}"
-        puts " File Type:\t#{sample[:shadow][:type]}"
-        pbwhite("\t[ Anti-Virus ]")
-        sample[:shadow][:avres].each { |av| pp "#{av}"}
-        puts "\n"
-      end
+    def pass
+      ;
     end
 
     def load_directory(path)
@@ -113,5 +93,5 @@ module Maz
       puts white("[-] #{msg}")
     end
 
-  end # end of class
-end # end of module
+  end
+end

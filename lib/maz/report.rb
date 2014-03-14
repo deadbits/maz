@@ -32,20 +32,20 @@ module Maz
           else
             error("problem saving report.")
           end
-        when "html"
-          report = html_report(data)
-          if report
-            save_report(report, filename)
-          else
-            error("problem saving report.")
-          end
-        when "xml"
-          report = xml_report(data)
-          if report
-            save_report(report, filename)
-          else
-            error("problem saving report.")
-          end
+        #when "html"
+        #  report = html_report(data)
+        #  if report
+        #    save_report(report, filename)
+        #  else
+        #    error("problem saving report.")
+        #  end
+        #when "xml"
+        #  report = xml_report(data)
+        #  if report
+        #    save_report(report, filename)
+        #  else
+        #    error("problem saving report.")
+        #  end
         else
           error("#{format} is not a valid report format.")
           puts "valid formats: html, text, xml"
