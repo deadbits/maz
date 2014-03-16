@@ -14,15 +14,15 @@ module Maz
   class Console < Maz::Core
     @@Analyze = Maz::Analyze.new
     @commands = [ "help", "report", "search", "recent", "exit", "quit", "load", "analyze",
-      "anubis", "vtotal", "threatx" ].sort
+      "anubis", "vtotal", "remote", "shadow" ].sort
 
     def help_menu
       puts %{
 
-        for full support, review the files in the 'docs' directory.
-
      :::General Commands:::
         help                       -   display this menu
+         web                       -   launch web interface
+      remote                       -   configure MAZ for remote MongoDB instance
       report [html/txt] [sample]   -   generate report on [sample]
       search [type] [data]         -   query db for [md5/sha1/name] of [data]
       recent                       -   show most recent submission
@@ -35,10 +35,11 @@ module Maz
         load [file/directory]      -   add [file] or [directory] to queue
      analyze <queue> [file]        -   analyze [file], report and submit to database
         queue                      -   view queued sample list
-         tag [sample] [tags]       -   add custom tags to [sample] in db. use comma separated tags
-      anubis [sample]              -   submit [sample] to Anubis and get report
-      vtotal [sample]              -   submit [sample] to VirusTotal and get report
-     threatx [sample]              -   query ThreatExpert for [sample]
+         tags                      -   tag management
+      anubis [sample]              -   submit [sample] to Anubis
+      vtotal [sample]              -   submit [sample] to VirusTotal
+     wepawet [sample]              -   submit [sample] to Wepawet
+    lastline [sample]              -   submit [sample] to Lastline
       }
     end
 
@@ -138,9 +139,10 @@ module Maz
             error("the file queue is empty")
           end
 
-        elsif cmd == "tag"
-          status("entering tag management")
-          manage_tags
+        elsif cmd == "tags"
+          no_feature("tag management")
+          #status("entering tag management")
+          #manage_tags
 
         elsif cmd == "recent"
           last = @@Database.view_last
@@ -167,6 +169,21 @@ module Maz
             file_name = cmd.split(" ")[1]
             @@Analyze.submit(file_name)
           end
+
+        elsif cmd.include?("lastline")
+          no_feature("lastline")
+
+        elsif cmd.include?("vtotal")
+          no_feature("vtotal")
+
+        elsif cmd.include?("wepawet")
+          no_feature("wepawet")
+
+        elsif cmd.include?("anubis")
+          no_feature("anubis")
+
+        elsif cmd == "web"
+          no_feature("web")
 
         elsif cmd.include?("load")
           queue_add(cmd)

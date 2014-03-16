@@ -93,5 +93,9 @@ module Maz
       puts white("[-] #{msg}")
     end
 
+    def no_feature(name)
+      info("feature #{name} not yet implemented")
+    end
+
   end
 end

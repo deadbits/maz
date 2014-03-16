@@ -44,9 +44,20 @@ module Maz
         opt :query, "Search MAZ database for MD5 hash", :type => String
         opt :recent, "Display last [count] submissions", :type => Integer
         opt :stats, "Show statistics on indexed samples and database entries", :default => false
+        opt :web, "Launch MAZ web engine", :default => False
+        opt :host, "Remote MongoDB host for sample storage", :type => String
+        opt :port, "Remote MongoDB port for sample storage", :type => Integer
       end
 
-      if @opts[:file]
+      if @opts[:web]
+        no_feature("web")
+
+      elsif @opts[:host]
+        if @opts[:port]
+          no_feature("remote mongodb instance")
+        end
+
+      elsif @opts[:file]
         if File.exists?(@opts[:file])
           @@Analyze.submit(@opts[:file])
         else
@@ -70,21 +81,6 @@ module Maz
       end
 
     end
-
-    #def submit(file_name)
-    #  status("\nstarting analysis of sample: #{file_name}")
-    #  sample, stored = @@Analyze.submit(file_name)
-    #  if sample == false or stored == false
-    #    error("error attempting to analyze file: #{file_name}")
-    #    exit
-    #  end
-    #  info("sample copied to storage directory: #{stored}")
-    #  status("submitting to database ...")
-    #  @@Database.insert(sample)
-    #  unless @opts[:report] == false
-    #    Maz::Report.text_report(sample)
-    #  end
-    #end
 
   end
 end
