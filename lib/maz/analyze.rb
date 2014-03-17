@@ -25,6 +25,7 @@ require 'nokogiri'
 require 'open-uri'
 require 'crack'
 require 'json'
+#require 'yara'
 
 module Maz
   class Analyze < Maz::Core
@@ -37,16 +38,28 @@ module Maz
       end
     end
 
-    def strings(file)
-      result = {}
-      output = `strings -a -t x #{file}`.split("\n")
-      output.each do |line|
-        offset = line.split(" ")[0].to_s
-        ascii = line.split(" ")[1].to_s
-        result["#{offset}"] = "#{ascii}"
-      end
-      return result
-    end
+    #def yara
+    #  results = []
+    #  rules = []
+    #  rules.each do |r|
+    #    rule = Yara::Rules.new
+    #    rule.compile_string(r)
+    #    rule.scan_file(@sample[:location]) do |match|
+    #      results << (match.rule).to_s
+    #    end
+    #  end
+    #end
+
+    #def strings(file)
+    #  result = {}
+    #  output = `strings -a -t x #{file}`.split("\n")
+    #  output.each do |line|
+    #    offset = line.split(" ")[0].to_s
+    #    ascii = line.split(" ")[1].to_s
+    #    result["#{offset}"] = "#{ascii}"
+    #  end
+    #  return result
+    #end
 
     def store_file
       storage_path = "#{ENV['HOME']}/maz/samples"
@@ -71,7 +84,7 @@ module Maz
         :time => time,
         :md5_hash => Digest::MD5.hexdigest(File.read(file_name)),
         :sha1_hash => Digest::SHA1.hexdigest(File.read(file_name)),
-        :strings => strings(file_name),
+        #:strings => strings(file_name),
         :shadow => shadow_query(Digest::MD5.hexdigest(File.read(file_name))),
         :tags => []
       }
@@ -105,7 +118,7 @@ module Maz
         lines = result.split("\n")
         md5, sha1, first, last, type, ssdeep = lines[0].gsub(/\"/,'').split(/,/)
         av_results = JSON.parse(lines[1])
-        @shadow_report = {
+        @shadow = {
           :md5 => md5,
           :sha1 => sha1,
           :first => first,
@@ -114,24 +127,22 @@ module Maz
           :ssdeep => ssdeep,
           :avres => av_results
         }
-        return @shadow_report
+        return @shadow
       end
       return nil
     end
 
     def cymru_query(md5_hash)
-      @cymru_result = []
+      @cymru = []
       connect = TCPSocket.new("hash.cymru.com", 43)
       connect.write("begin\nverbose\n#{md5_hash}\nend\n")
       connect.each_line do |line|
         unless line =~ /^#/
-          @cymru_result << line.chomp.split(/\s+/,3)
+          @cymru << line.chomp.split(/\s+/,3)
         end
       end
       return @cymru_result
     end
-
-
 
   end
 end

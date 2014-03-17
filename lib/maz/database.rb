@@ -78,7 +78,7 @@ module Maz
     end
 
     def delete_entry(type, query)
-      if type == "file"
+      if type == "name"
         result = @store_db.remove("file_name" => "#{query}")
       elsif type == "md5"
         result = @store_db.remove("md5_hash" => "#{query}")

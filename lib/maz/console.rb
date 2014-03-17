@@ -49,14 +49,18 @@ module Maz
         result = @@Database.search("md5", query, true)
       elsif type.downcase == "sha1"
         result = @@Database.search("sha1", query, true)
-      elsif type.downcase == "file"
+      elsif type.downcase == "name"
         result = @@Database.search("file", query, true)
       else
         error("#{type} is not a valid search type")
       end
       unless result == nil
         pbwhite("Search Results: ")
-        pp result
+        if result == false
+          puts "no results found for #{type} => #{query}"
+        else
+          pp result
+        end
       end
     end
 
@@ -70,46 +74,6 @@ module Maz
         status("added sample #{path} to queue ...")
         @queue << path
       end
-    end
-
-    def manage_tags
-      pbwhite("\nTo start adding tags to your samples, first start by entering")
-      pbwhite("a sample name or md5 into the prompt below. after the sample is")
-      pbwhite("found and queued, tags can be entered as comma separated values.")
-      pbwhite("save your tags by hitting `enter`. return to the main console with")
-      pbwhite("`home`")
-
-      stty_pre = `stty -g`.chomp
-      prompt = white(bold("sample >> "))
-
-      while cmd = Readline.readline("#{prompt}", true).chomp
-        if cmd == "home"
-          status("returning to main menu")
-          initialize
-
-        elsif cmd == ""
-          error("please enter a valid sample name or command")
-
-        elsif search(cmd, "md5", show=false)
-          sample = search(cmd, "md5", show=false)
-          prompt = white(bold("tags >> "))
-          while cmd = Readline.readline("#{prompt}", true).chomp
-            if cmd == ""
-              info("no tags were entered. returning to main console ...")
-              initialize
-            else
-              begin
-                tags = cmd.split(",")
-                sample[:tags] = tags
-                @@Database.update(sample)
-              rescue
-                error("tags msut be entered as comma separated values")
-              end
-            end
-          end
-        end
-      end
-
     end
 
     def initialize
@@ -132,11 +96,12 @@ module Maz
           system("clear")
         elsif cmd == "queue"
           if @queue
+            pbwhite("Current Sample Queue: ")
             @queue.each do |f|
               puts f
             end
           else
-            error("the file queue is empty")
+            info("the file queue is empty")
           end
 
         elsif cmd == "tags"
@@ -170,6 +135,9 @@ module Maz
             @@Analyze.submit(file_name)
           end
 
+        elsif cmd.include?("load")
+          queue_add(cmd)
+
         elsif cmd.include?("lastline")
           no_feature("lastline")
 
@@ -184,9 +152,6 @@ module Maz
 
         elsif cmd == "web"
           no_feature("web")
-
-        elsif cmd.include?("load")
-          queue_add(cmd)
 
         else
           error("command #{cmd} is not a valid entry.")

@@ -23,36 +23,7 @@ require 'json'
 module Maz
   class Report < Maz::Core
 
-    def generate(data, format, filename)
-      case format.downcase
-        when "text" or "txt"
-          report = text_report(data)
-          if report
-            save_report(report, filename)
-          else
-            error("problem saving report.")
-          end
-        #when "html"
-        #  report = html_report(data)
-        #  if report
-        #    save_report(report, filename)
-        #  else
-        #    error("problem saving report.")
-        #  end
-        #when "xml"
-        #  report = xml_report(data)
-        #  if report
-        #    save_report(report, filename)
-        #  else
-        #    error("problem saving report.")
-        #  end
-        else
-          error("#{format} is not a valid report format.")
-          puts "valid formats: html, text, xml"
-      end
-    end
-
-    def text_report(data)
+    def text(data)
       report = ""
       if data[:file_name]
         # check if the sample data we are using for the
@@ -95,7 +66,7 @@ module Maz
       end
     end
 
-    def save_report(data, output_file)
+    def save(data, output_file)
       if File.exist?(output_file)
         error("file #{output_file} all ready exists. please specify another output filename.")
         return false
