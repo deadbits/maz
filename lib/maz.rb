@@ -5,6 +5,7 @@ require 'maz/core'
 require 'maz/database'
 require 'maz/analyze'
 require 'maz/console'
+require 'maz/logging'
 require 'maz/cli'
 
 module Maz

@@ -44,7 +44,7 @@ module Maz
         opt :query, "Search MAZ database for MD5 hash", :type => String
         opt :recent, "Display last [count] submissions", :type => Integer
         opt :stats, "Show statistics on indexed samples and database entries", :default => false
-        opt :web, "Launch MAZ web engine", :default => False
+        opt :web, "Launch MAZ web engine", :default => false
         opt :host, "Remote MongoDB host for sample storage", :type => String
         opt :port, "Remote MongoDB port for sample storage", :type => Integer
       end

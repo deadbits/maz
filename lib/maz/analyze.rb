@@ -20,6 +20,7 @@
 require 'digest/md5'
 require 'digest/sha1'
 require 'net/http'
+require 'socket'
 require 'nokogiri'
 require 'open-uri'
 require 'crack'
@@ -117,6 +118,20 @@ module Maz
       end
       return nil
     end
+
+    def cymru_query(md5_hash)
+      @cymru_result = []
+      connect = TCPSocket.new("hash.cymru.com", 43)
+      connect.write("begin\nverbose\n#{md5_hash}\nend\n")
+      connect.each_line do |line|
+        unless line =~ /^#/
+          @cymru_result << line.chomp.split(/\s+/,3)
+        end
+      end
+      return @cymru_result
+    end
+
+
 
   end
 end
