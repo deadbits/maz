@@ -43,6 +43,11 @@ module Maz
       entry_id = @store_db.find("md5_hash" => "#{entry}")
     end
 
+    def dump(type)
+      results = @store_db.distinct(type)
+      return results
+    end
+
     def insert(data)
       entry_id = @store_db.insert(data)
       status("entry accepted for id: #{entry_id}")
@@ -55,26 +60,19 @@ module Maz
 
     def stats
       pgreen("\n\t[ Database Statistics ]")
-      pbwhite("\ntotal entries: ")
-      pp count_all
       pbwhite("\ndatabase stats: ")
       @mazdb.stats().each_pair { |k,v| puts "#{k} : #{v}" }
       pbwhite("\nstorage collection: ")
       @store_db.stats().each_pair { |k,v| puts "#{k} : #{v}" }
       puts "\n"
+      pbwhite("\ntotal entries: ")
+      pp count_all
+      puts "\n"
     end
 
     def view_last
-      result = @store_db.find_one.to_a
+      result = @store_db.find.sort([['_id', -1]]).limit(1).to_a
       return result
-    end
-
-    def view_all
-      all = {}
-      @store_db.find.each do |item|
-        puts item.inspect
-      end
-      return all
     end
 
     def delete_entry(type, query)

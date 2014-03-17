@@ -42,7 +42,7 @@ module Maz
         opt :file, "Sample file path to analyze and submit", :type => String
         opt :report, "Display text report after analysis", :default => true
         opt :query, "Search MAZ database for MD5 hash", :type => String
-        opt :recent, "Display last [count] submissions", :type => Integer
+        opt :recent, "Display last submssion", :default => false
         opt :stats, "Show statistics on indexed samples and database entries", :default => false
         opt :web, "Launch MAZ web engine", :default => false
         opt :host, "Remote MongoDB host for sample storage", :type => String

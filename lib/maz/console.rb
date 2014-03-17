@@ -28,14 +28,14 @@ module Maz
       recent                       -   show most recent submission
       delete [sample md5]          -   remove [sample] from database completely
        stats                       -   display database statistics
+        dump [md5/name]            -   display all md5's or filenames from database
        clear                       -   clears the console screen
-        exit                       -   shutdown the MAZ console
+        quit                       -   shutdown the MAZ console
 
       :::Analysis Commands:::
+        queue                      -   view queued sample list
         load [file/directory]      -   add [file] or [directory] to queue
      analyze <queue> [file]        -   analyze [file], report and submit to database
-        queue                      -   view queued sample list
-         tags                      -   tag management
       anubis [sample]              -   submit [sample] to Anubis
       vtotal [sample]              -   submit [sample] to VirusTotal
      wepawet [sample]              -   submit [sample] to Wepawet
@@ -104,11 +104,6 @@ module Maz
             info("the file queue is empty")
           end
 
-        elsif cmd == "tags"
-          no_feature("tag management")
-          #status("entering tag management")
-          #manage_tags
-
         elsif cmd == "recent"
           last = @@Database.view_last
           pbwhite("Last Submission: ")
@@ -116,6 +111,15 @@ module Maz
 
         elsif cmd.include?("search")
           search(cmd)
+
+        elsif cmd.include?("dump")
+          type = cmd.split(" ")[1]
+          if type == "md5"
+            result = @@Database.dump("md5_hash")
+          elsif type == "name"
+            result = @@Database.dump("file_name")
+          end
+          pp result
 
         elsif cmd == "stats"
           @@Database.stats
@@ -154,7 +158,7 @@ module Maz
           no_feature("web")
 
         else
-          error("command #{cmd} is not a valid entry.")
+          error("#{cmd} is not a valid command. type 'help' for more information.")
         end
 
       end
