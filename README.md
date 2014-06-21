@@ -1,10 +1,10 @@
 # Malware Analysis Zoo
 ====================
-**author:## ohdae [adam m. swanda]
+**author:**  ohdae [adam michael]
 **website:** https://github.com/ohdae/maz
 **license:** MIT License
 
-MAZ is a Ruby based application for performing malware analysis and storage. Full documentation, license details and otehr information is available in the docs/ directory.
+MAZ, short of Malware Analysis Zoo, is a Ruby based application for performing static malware analysis, and submitting samples and gathering the reports from 3rd party analysis services. The raw samples and all metadata and IOCs are stored within a local (or remote) MongoDB. Full documentation, license details and otehr information is available in the docs/ directory.
 
 ## Documentation:
 | File | Purpose |
