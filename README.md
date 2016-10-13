@@ -1,8 +1,8 @@
 # Malware Analysis Zoo
 ====================
-**author:**  ohdae [adam michael]
-**website:** https://github.com/ohdae/maz
-**license:** MIT License
+**author:**  Adam M. Swanda  
+**website:** https://github.com/deadbits/maz  
+**license:** MIT License  
 
 ###### This version will soon be deprecated by a rebuild in Python ~ April 2015
 
